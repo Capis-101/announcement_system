@@ -8,17 +8,16 @@ export default function Home() {
   const currentUser = "CurrentUser"; // replace later with auth UID
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [commentInputs, setCommentInputs] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // ===== SEARCH =====
   const filteredAnnouncements = announcements.filter(
-  (a) =>
-    a.category === "Teacher" &&
-    a.title.toLowerCase().includes(searchQuery.toLowerCase())
-);
+    (a) =>
+      a.category === "Teacher" &&
+      a.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-
-  // ===== LIKE (SAFE) =====
+  // ===== LIKE =====
   const handleLike = (post) => {
     if (post.likedBy?.includes(currentUser)) {
       alert("You already liked this post.");
@@ -60,11 +59,12 @@ export default function Home() {
                 src={post.attachment}
                 alt="Attachment"
                 style={styles.image}
+                onClick={() => setSelectedImage(post.attachment)}
               />
             )}
 
-            {post.startDate && <p>🗓 Start: {post.startDate}</p>}
-            {post.endDate && <p>🗓 End: {post.endDate}</p>}
+            {post.startDate && <p>📅 Start: {post.startDate}</p>}
+            {post.endDate && <p>📅 End: {post.endDate}</p>}
 
             <button
               onClick={() => handleLike(post)}
@@ -77,10 +77,25 @@ export default function Home() {
             >
               👍 {alreadyLiked ? "Liked" : "Like"} ({post.likes || 0})
             </button>
-
           </div>
         );
       })}
+
+      {/* IMAGE MODAL */}
+      {selectedImage && (
+        <div
+          style={styles.modalOverlay}
+          onClick={() => setSelectedImage(null)}
+        >
+          <div style={styles.modalContent}>
+            <img
+              src={selectedImage}
+              alt="Full View"
+              style={styles.modalImage}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -107,7 +122,6 @@ const styles = {
     fontSize: "1rem",
   },
   noPosts: { color: "#6b7280", fontStyle: "italic" },
-
   card: {
     background: "#fff",
     padding: "20px",
@@ -117,8 +131,12 @@ const styles = {
   },
   title: { fontSize: "1.3rem", fontWeight: "600", marginBottom: "8px" },
   content: { marginBottom: "8px", color: "#374151" },
-  image: { maxWidth: "200px", borderRadius: "8px", marginBottom: "8px" },
-
+  image: {
+    maxWidth: "200px",
+    borderRadius: "8px",
+    marginBottom: "8px",
+    cursor: "zoom-in",
+  },
   likeBtn: {
     background: "#3b82f6",
     color: "#fff",
@@ -127,23 +145,27 @@ const styles = {
     borderRadius: "6px",
     marginTop: "10px",
   },
-  commentInput: {
+
+  // MODAL
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    background: "rgba(0,0,0,0.7)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000,
+  },
+  modalContent: {
+    maxWidth: "90%",
+    maxHeight: "90%",
+  },
+  modalImage: {
     width: "100%",
-    padding: "8px",
-    borderRadius: "6px",
-    border: "1px solid #d1d5db",
-    marginBottom: "8px",
-  },
-  commentBtn: {
-    background: "#10b981",
-    color: "#fff",
-    border: "none",
-    padding: "6px 12px",
-    borderRadius: "6px",
-  },
-  comment: {
-    marginTop: "6px",
-    fontSize: "0.9rem",
-    color: "#4b5563",
+    height: "auto",
+    borderRadius: "10px",
   },
 };
