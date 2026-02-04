@@ -164,7 +164,7 @@ const styles = {
     maxHeight: "90%",
   },
   modalImage: {
-    width: "100%",
+    width: "88%",
     height: "auto",
     borderRadius: "10px",
   },
