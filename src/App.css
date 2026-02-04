@@ -1,0 +1,389 @@
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+/* =========================
+   LANDING PAGE WRAPPER
+========================= */
+.landing-root {
+  width: 100%;
+  overflow-x: clip; /* modern fix for horizontal scroll */
+  position: relative;
+}
+
+/* =========================
+   CONTAINER (FOR OTHER PAGES)
+========================= */
+
+
+/* =========================
+   NAVBAR
+========================= */
+nav {
+  background-color: #1e293b;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+nav button {
+  margin-left: auto;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ef4444;
+  color: #fff;
+  cursor: pointer;
+}
+
+nav button:hover {
+  background-color: #dc2626;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+.hero {
+  width: 100%;
+  height: 80vh;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 30px;
+}
+
+.hero-overlay {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+}
+
+.hero-overlay h1 {
+  color: white;
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.hero-overlay p {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.hero-btn {
+  background: #22c55e;
+  padding: 12px 28px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  border: none;
+}
+
+.hero-btn:hover {
+  background: #16a34a;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+section {
+  background: #ffffff;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* =========================
+   ABOUT SECTION
+========================= */
+.about h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.about-intro {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.about-content {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.about-content img {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 8px;
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text ul {
+  padding-left: 0;
+}
+
+.about-text li {
+  padding: 6px 0;
+}
+
+/* =========================
+   IMAGE GALLERY
+========================= */
+.about-gallery {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.about-gallery img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* =========================
+   CONTACT SECTION
+========================= */
+.contact h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.contact-info {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* =========================
+   HEADINGS
+========================= */
+h1 {
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+h2 {
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+/* =========================
+   ANNOUNCEMENT CARD
+========================= */
+.card {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  margin-bottom: 6px;
+}
+
+.card small {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+/* =========================
+   INPUTS
+========================= */
+input,
+textarea,
+select {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+textarea {
+  height: 120px;
+  resize: none;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+.dashboard {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   LISTS (CLUBS)
+========================= */
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  background: #ffffff;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  background-color: #1e293b;
+  color: #ffffff;
+  margin-top: 40px;
+  padding: 30px 20px;
+}
+
+.footer-copy {
+  font-size: 13px;
+  opacity: 0.7;
+  text-align: center;
+}
+
+/* =========================
+   LOGIN MODAL
+========================= */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.login-modal {
+  background: #ffffff;
+  padding: 30px;
+  width: min(90%, 360px);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   IMAGE SAFETY
+========================= */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================
+   SCROLL ANIMATIONS
+========================= */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: all 0.8s ease;
+}
+
+.fade-left.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: all 0.8s ease;
+}
+
+.fade-right.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.fade-in.show {
+  opacity: 1;
+}

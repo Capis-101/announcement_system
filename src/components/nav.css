@@ -1,0 +1,50 @@
+.landing-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #1f2937;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Link container */
+.landing-links {
+  display: flex;
+  gap: 20px;
+}
+
+/* Links */
+.landing-link {
+  position: relative;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 4px 2px;
+  transition: color 0.3s ease;
+}
+
+/* Hover underline animation */
+.landing-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: #22c55e;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.landing-link:hover {
+  color: #22c55e;
+}
+
+.landing-link:hover::after {
+  transform: scaleX(1);
+}
