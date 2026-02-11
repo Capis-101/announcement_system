@@ -1,85 +1,118 @@
-import { useState, useContext } from "react";
-import { AnnouncementContext } from "../context/AnnouncementContext";
+import { useState, useEffect } from "react";
+import { db } from "../firebase";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-export default function sslg() {
-  const { announcements, updateAnnouncement } =
-    useContext(AnnouncementContext);
+export default function SSLGAnnouncements() {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
 
-  const currentUser = "CurrentUser"; // replace later with auth UID
-
-  const [searchQuery, setSearchQuery] = useState("");
+  const [announcements, setAnnouncements] = useState([]);
+  const [search, setSearch] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // ===== SEARCH =====
+  // ===== FETCH ANNOUNCEMENTS =====
+  useEffect(() => {
+    const q = query(
+      collection(db, "announcements"),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => {
+        const postData = doc.data();
+        if (!Array.isArray(postData.likes)) postData.likes = [];
+        if (!Array.isArray(postData.comments)) postData.comments = [];
+        return { id: doc.id, ...postData };
+      });
+      setAnnouncements(data);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // ===== LIKE / UNLIKE =====
+  const handleLike = async (postId, postLikes) => {
+    if (!currentUser) return;
+
+    const postRef = doc(db, "announcements", postId);
+
+    if (postLikes.includes(currentUser.uid)) {
+      await updateDoc(postRef, {
+        likes: arrayRemove(currentUser.uid),
+      });
+    } else {
+      await updateDoc(postRef, {
+        likes: arrayUnion(currentUser.uid),
+      });
+    }
+  };
+
+  // ===== FILTER ANNOUNCEMENTS =====
   const filteredAnnouncements = announcements.filter(
     (a) =>
-      a.category === "sslg" &&
-      a.title.toLowerCase().includes(searchQuery.toLowerCase())
+      a.category === "sslg" && // <-- Only show SSLG announcements
+      a.title?.toLowerCase().includes(search.toLowerCase())
   );
-
-  // ===== LIKE =====
-  const handleLike = (post) => {
-    if (post.likedBy?.includes(currentUser)) {
-      alert("You already liked this post.");
-      return;
-    }
-
-    updateAnnouncement(post.id, {
-      likes: (post.likes || 0) + 1,
-      likedBy: [...(post.likedBy || []), currentUser],
-    });
-  };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.header}>Announcements</h1>
+      <h1 style={styles.header}>SSLG Announcements</h1>
 
       <input
         type="text"
         placeholder="Search announcements by title..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         style={styles.searchInput}
       />
 
-      {filteredAnnouncements.length === 0 && (
+      {filteredAnnouncements.length === 0 ? (
         <p style={styles.noPosts}>No announcements found.</p>
+      ) : (
+        filteredAnnouncements.map((post) => {
+          const postLikes = post.likes || [];
+          const liked = currentUser && postLikes.includes(currentUser.uid);
+
+          return (
+            <div key={post.id} style={styles.card}>
+              <h3 style={styles.title}>{post.title}</h3>
+              <p style={styles.content}>{post.content}</p>
+
+              {post.attachment && (
+                <img
+                  src={post.attachment}
+                  alt="Attachment"
+                  style={styles.image}
+                  onClick={() => setSelectedImage(post.attachment)}
+                />
+              )}
+
+              {post.startDate && <p>📅 Start: {post.startDate}</p>}
+              {post.endDate && <p>📅 End: {post.endDate}</p>}
+
+              <button
+                onClick={() => handleLike(post.id, postLikes)}
+                style={{
+                  ...styles.likeBtn,
+                  backgroundColor: liked ? "#ef4444" : "#3b82f6",
+                }}
+              >
+                {liked ? "❤️ Liked" : "👍 Like"} ({postLikes.length})
+              </button>
+            </div>
+          );
+        })
       )}
-
-      {filteredAnnouncements.map((post) => {
-        const alreadyLiked = post.likedBy?.includes(currentUser);
-
-        return (
-          <div key={post.id} style={styles.card}>
-            <h3 style={styles.title}>{post.title}</h3>
-            <p style={styles.content}>{post.content}</p>
-
-            {post.attachment && (
-              <img
-                src={post.attachment}
-                alt="Attachment"
-                style={styles.image}
-                onClick={() => setSelectedImage(post.attachment)}
-              />
-            )}
-
-            {post.startDate && <p>📅 Start: {post.startDate}</p>}
-            {post.endDate && <p>📅 End: {post.endDate}</p>}
-
-            <button
-              onClick={() => handleLike(post)}
-              disabled={alreadyLiked}
-              style={{
-                ...styles.likeBtn,
-                opacity: alreadyLiked ? 0.5 : 1,
-                cursor: alreadyLiked ? "not-allowed" : "pointer",
-              }}
-            >
-              👍 {alreadyLiked ? "Liked" : "Like"} ({post.likes || 0})
-            </button>
-          </div>
-        );
-      })}
 
       {/* IMAGE MODAL */}
       {selectedImage && (
@@ -138,12 +171,12 @@ const styles = {
     cursor: "zoom-in",
   },
   likeBtn: {
-    background: "#3b82f6",
     color: "#fff",
     border: "none",
     padding: "6px 12px",
     borderRadius: "6px",
     marginTop: "10px",
+    cursor: "pointer",
   },
 
   // MODAL
