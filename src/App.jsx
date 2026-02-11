@@ -25,7 +25,7 @@ function App() {
     location.pathname === "/create-club-post" ||
     location.pathname.startsWith("/club/") ||
     location.pathname === "/" ||
-    location.pathname === "/enrollment"||
+    location.pathname === "/enrollment" ||
     location.pathname === "/sslg-dashboard"; 
 
   const isLandingPage = location.pathname === "/";
@@ -73,11 +73,11 @@ function App() {
               }
             />
 
-            {/* Club Officer */}
+            {/* Club Officer - ROLE UPDATED TO MATCH FIRESTORE */}
             <Route
               path="/create-club-post"
               element={
-                <ProtectedRoute role="club">
+                <ProtectedRoute role="clubpresident"> {/* Matches Firestore "clubpresident" */}
                   <CreateClubPost />
                 </ProtectedRoute>
               }
@@ -86,13 +86,13 @@ function App() {
             <Route
               path="/club/:clubName"
               element={
-                <ProtectedRoute role="club">
+                <ProtectedRoute role="clubpresident"> {/* Matches Firestore "clubpresident" */}
                   <ClubDashboard />
                 </ProtectedRoute>
               }
             />
 
-            {/* SSLG Dashboard ✅ FIXED */}
+            {/* SSLG Dashboard */}
             <Route
               path="/sslg-dashboard"
               element={
