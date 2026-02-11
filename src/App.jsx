@@ -11,7 +11,9 @@ import ClubDashboard from "./dashboard/ClubDashboard";
 import Enrollement from "./pages/Enrollement";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Landingpage from "./pages/landingpage";
-import ClubAnnouncement from "./pages/ClubAnnouncement"; // 👈 ADD THIS
+import SslgDashboard from "./dashboard/sslgDashboard"; // ✅ renamed
+import ClubAnnouncement from "./pages/ClubAnnouncement";
+import Sslg from "./pages/sslg"; // ✅ new page for SSLG announcements
 
 function App() {
   const location = useLocation();
@@ -21,9 +23,10 @@ function App() {
     location.pathname === "/teacher" ||
     location.pathname === "/create-post" ||
     location.pathname === "/create-club-post" ||
-    location.pathname.startsWith("/club/") || // dashboard only
+    location.pathname.startsWith("/club/") ||
     location.pathname === "/" ||
-    location.pathname === "/enrollment";
+    location.pathname === "/enrollment"||
+    location.pathname === "/sslg-dashboard"; 
 
   const isLandingPage = location.pathname === "/";
 
@@ -31,26 +34,25 @@ function App() {
     <>
       {!hideNavbar && <Navbar />}
 
-      {/* Landing page */}
       {isLandingPage && (
         <Routes>
           <Route path="/" element={<Landingpage />} />
         </Routes>
       )}
 
-      {/* App pages */}
       {!isLandingPage && (
         <div className="container">
           <Routes>
             <Route path="/mainpage" element={<MainPage />} />
             <Route path="/announcements" element={<Home />} />
 
-            {/* 👇 CLUB FLOW */}
+            {/* CLUB FLOW */}
             <Route path="/clubs" element={<Clubs />} />
             <Route path="/clubs/:clubName" element={<ClubAnnouncement />} />
 
             <Route path="/login" element={<Login />} />
             <Route path="/enrollment" element={<Enrollement />} />
+            <Route path="/sslg" element={<Sslg />} />
 
             {/* Teacher */}
             <Route
@@ -86,6 +88,16 @@ function App() {
               element={
                 <ProtectedRoute role="club">
                   <ClubDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* SSLG Dashboard ✅ FIXED */}
+            <Route
+              path="/sslg-dashboard"
+              element={
+                <ProtectedRoute role="sslg">
+                  <SslgDashboard />
                 </ProtectedRoute>
               }
             />

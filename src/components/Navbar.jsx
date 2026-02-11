@@ -32,6 +32,7 @@ export default function Navbar() {
           </Link>
           <Link to="/clubs">Clubs</Link>
           <Link to="/announcements">Announcements</Link>
+          <Link to="/sslg">SSLG</Link>
         </div>
 
         {/* RIGHT LOGOUT */}

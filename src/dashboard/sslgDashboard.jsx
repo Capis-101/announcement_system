@@ -1,14 +1,14 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase"; // make sure your auth is exported
+import { auth } from "../firebase";
 import { AnnouncementContext } from "../context/AnnouncementContext";
 
-export default function TeacherDashboard() {
+export default function SSLGDashboard() {
   const { announcements, addAnnouncement, deleteAnnouncement, updateAnnouncement } =
     useContext(AnnouncementContext);
 
-  const currentUser = "Teacher"; // TODO: replace with auth UID later
+  const currentUser = "sslg"; // TODO: replace with auth UID later
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -42,7 +42,7 @@ export default function TeacherDashboard() {
       startDate,
       endDate,
       attachment,
-      category: "Teacher",
+      category: "sslg",
       createdAt: new Date().toISOString(),
       likes: 0,
       likedBy: [],
@@ -86,8 +86,8 @@ export default function TeacherDashboard() {
   };
 
   // ===== FILTER & SORT =====
-  const teacherPosts = announcements
-    .filter((a) => a.category === "Teacher")
+  const sslgPosts = announcements
+    .filter((a) => a.category === "sslg")
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
@@ -97,9 +97,8 @@ export default function TeacherDashboard() {
       </button>
 
       <header style={styles.header}>
-        <h1>Teacher Dashboard</h1>
-        <p>Welcome, Teacher</p>
-        <p>Quick Stats: {teacherPosts.length} Announcements</p>
+        <h1>SSLG Dashboard</h1>
+        <p>Quick Stats: {sslgPosts.length} Announcements</p>
       </header>
 
       {/* CREATE POST */}
@@ -153,7 +152,7 @@ export default function TeacherDashboard() {
       <section>
         <h2 style={styles.sectionTitle}>Recent Announcements</h2>
 
-        {teacherPosts.map((post) => {
+        {sslgPosts.map((post) => {
           const alreadyLiked = post.likedBy?.includes(currentUser);
 
           return (

@@ -14,6 +14,7 @@ export default function Login() {
   const credentials = {
     teacher: { email: "teacher@email.com", password: "teacher123" },
     club: { email: "clubpresident@email.com", password: "club123" },
+    sslg: { email: "sslg@email.com", password: "sslg123" },
   };
 
   const handleSubmit = (e) => {
@@ -31,6 +32,12 @@ export default function Login() {
     ) {
       login({ email, role: "club" });
       navigate("/create-club-post");
+    } else if (
+      email === credentials.sslg.email &&
+      password === credentials.sslg.password
+    ) {
+      login({ email, role: "sslg" });
+      navigate("/sslg-dashboard");
     } else {
       setError("Invalid email or password!");
     }
@@ -124,10 +131,6 @@ export default function Login() {
           </button>
         </form>
 
-        <p style={{ fontSize: "0.85rem", color: "#666", marginTop: "15px" }}>
-          Teacher: teacher@email.com / teacher123 <br />
-          Club President: clubpresident@email.com / club123
-        </p>
       </div>
     </div>
   );

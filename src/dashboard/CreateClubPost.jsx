@@ -22,6 +22,7 @@ export default function ClubDashboard() {
     "Sigma",
     "SHS Science Club",
     "Barkada Kontra Bisyo",
+    "Boy Scouts",
     "Communication Arts Club",
   ];
 

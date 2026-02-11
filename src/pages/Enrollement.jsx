@@ -23,7 +23,6 @@ const HighSchoolEnrollmentForm = () => {
     zipCode: '',
     gradeLevel: '',
     schoolYear: '',
-    section: '',
     previousSchool: '',
     schoolAddress: '',
     studentType: '',
@@ -111,9 +110,8 @@ const HighSchoolEnrollmentForm = () => {
 
         {/* Academic Info */}
         <Section title="📚 ACADEMIC INFORMATION">
-          <SelectField label="Grade Level" name="gradeLevel" value={formData.gradeLevel} onChange={handleChange} required options={['7','8','9','10','11','12']} />
+          <SelectField label="Grade Level" name="gradeLevel" value={formData.gradeLevel} onChange={handleChange} required options={['11','12']} />
           <InputField label="School Year" name="schoolYear" value={formData.schoolYear} onChange={handleChange} required />
-          <InputField label="Section" name="section" value={formData.section} onChange={handleChange} />
           <InputField label="Previous School" name="previousSchool" value={formData.previousSchool} onChange={handleChange} required />
           <InputField label="School Address" name="schoolAddress" value={formData.schoolAddress} onChange={handleChange} required />
           <RadioGroup label="Student Type" name="studentType" value={formData.studentType} onChange={handleChange} options={['New Student','Transferee','Balik-Aral']} />
@@ -123,8 +121,8 @@ const HighSchoolEnrollmentForm = () => {
         {/* Senior High */}
         {isSeniorHigh && (
           <Section title="🎓 SENIOR HIGH ONLY">
-            <SelectField label="Track" name="track" value={formData.track} onChange={handleChange} required options={['Academic','TVL','Sports','Arts & Design']} />
-            <SelectField label="Strand" name="strand" value={formData.strand} onChange={handleChange} required options={['STEM','ABM','HUMSS','GAS','TVL Specialization']} />
+            <SelectField label="Track" name="track" value={formData.track} onChange={handleChange} required options={['Academic','TVL']} />
+            <SelectField label="Strand" name="strand" value={formData.strand} onChange={handleChange} required options={['HUMSS','GAS','PLUMBING','SMAW','ICT']} />
           </Section>
         )}
 
@@ -220,3 +218,5 @@ const styles = {
 };
 
 export default HighSchoolEnrollmentForm;
+
+
