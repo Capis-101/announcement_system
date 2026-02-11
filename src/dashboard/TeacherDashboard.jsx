@@ -1,14 +1,14 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase"; // make sure your auth is exported
+import { auth } from "../firebase";
 import { AnnouncementContext } from "../context/AnnouncementContext";
 
 export default function TeacherDashboard() {
   const { announcements, addAnnouncement, deleteAnnouncement, updateAnnouncement } =
     useContext(AnnouncementContext);
 
-  const currentUser = "Teacher"; // TODO: replace with auth UID later
+  const currentUser = "Teacher"; // replace with auth UID if needed
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -28,22 +28,17 @@ export default function TeacherDashboard() {
   };
 
   // ===== CREATE ANNOUNCEMENT =====
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!title || !content) return alert("Please fill in title and content.");
 
-    if (!title || !content) {
-      alert("Please fill in title and content.");
-      return;
-    }
-
-    addAnnouncement({
+    await addAnnouncement({
       title,
       content,
       startDate,
       endDate,
       attachment,
       category: "Teacher",
-      createdAt: new Date().toISOString(),
       likes: 0,
       likedBy: [],
     });
@@ -56,20 +51,16 @@ export default function TeacherDashboard() {
   };
 
   // ===== DELETE =====
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Delete this announcement?")) {
-      deleteAnnouncement(id);
+      await deleteAnnouncement(id);
     }
   };
 
   // ===== LIKE =====
-  const handleLike = (post) => {
-    if (post.likedBy?.includes(currentUser)) {
-      alert("You already liked this post.");
-      return;
-    }
-
-    updateAnnouncement(post.id, {
+  const handleLike = async (post) => {
+    if (post.likedBy?.includes(currentUser)) return alert("You already liked this post.");
+    await updateAnnouncement(post.id, {
       likes: (post.likes || 0) + 1,
       likedBy: [...(post.likedBy || []), currentUser],
     });
@@ -80,21 +71,18 @@ export default function TeacherDashboard() {
     try {
       await signOut(auth);
       navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  // ===== FILTER & SORT =====
   const teacherPosts = announcements
     .filter((a) => a.category === "Teacher")
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
   return (
     <div style={styles.container}>
-      <button onClick={handleLogout} style={styles.logoutButton}>
-        Logout
-      </button>
+      <button onClick={handleLogout} style={styles.logoutButton}>Logout</button>
 
       <header style={styles.header}>
         <h1>Teacher Dashboard</h1>
@@ -102,7 +90,6 @@ export default function TeacherDashboard() {
         <p>Quick Stats: {teacherPosts.length} Announcements</p>
       </header>
 
-      {/* CREATE POST */}
       <section style={styles.card}>
         <h2>Create New Announcement</h2>
         <form onSubmit={handleSubmit}>
@@ -112,62 +99,33 @@ export default function TeacherDashboard() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-
           <textarea
             style={{ ...styles.input, height: "100px" }}
             placeholder="Content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
-
           <input type="file" onChange={handleFileChange} />
-
-          {attachment && (
-            <img
-              src={attachment}
-              alt="Preview"
-              style={{ maxWidth: "200px", marginBottom: "10px" }}
-            />
-          )}
-
+          {attachment && <img src={attachment} alt="Preview" style={{ maxWidth: "200px", marginBottom: "10px" }} />}
           <div style={styles.dateContainer}>
-            <input
-              type="date"
-              style={styles.input}
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            <input
-              type="date"
-              style={styles.input}
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
+            <input type="date" style={styles.input} value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <input type="date" style={styles.input} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
           </div>
-
           <button style={styles.button}>Submit</button>
         </form>
       </section>
 
-      {/* POSTS */}
       <section>
         <h2 style={styles.sectionTitle}>Recent Announcements</h2>
-
         {teacherPosts.map((post) => {
           const alreadyLiked = post.likedBy?.includes(currentUser);
-
           return (
             <div key={post.id} style={styles.postCard}>
               <div style={{ flex: 1 }}>
                 <h3>{post.title}</h3>
                 <p>{post.content}</p>
-
-                {post.attachment && (
-                  <img src={post.attachment} alt="" style={{ maxWidth: "200px" }} />
-                )}
-
+                {post.attachment && <img src={post.attachment} alt="" style={{ maxWidth: "200px" }} />}
                 <p>👍 {post.likes || 0}</p>
-
                 <button
                   onClick={() => handleLike(post)}
                   disabled={alreadyLiked}
@@ -180,10 +138,7 @@ export default function TeacherDashboard() {
                   {alreadyLiked ? "Liked" : "Like"}
                 </button>
               </div>
-
-              <button onClick={() => handleDelete(post.id)} style={styles.deleteButton}>
-                Delete
-              </button>
+              <button onClick={() => handleDelete(post.id)} style={styles.deleteButton}>Delete</button>
             </div>
           );
         })}
@@ -192,7 +147,6 @@ export default function TeacherDashboard() {
   );
 }
 
-// ===== STYLES =====
 const styles = {
   container: { maxWidth: "800px", margin: "40px auto", padding: "20px" },
   header: { textAlign: "center", marginBottom: "30px" },
@@ -203,5 +157,5 @@ const styles = {
   sectionTitle: { marginBottom: "15px" },
   postCard: { background: "#fff", padding: "15px", borderRadius: "10px", marginBottom: "15px", display: "flex", justifyContent: "space-between" },
   deleteButton: { background: "#ef4444", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "6px", cursor: "pointer", height: "fit-content" },
-  logoutButton: { marginLeft: "1000px", background: "#ff0000", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", marginTop: "10px" },
+  logoutButton: { marginLeft: "auto", display: "block", background: "#ff0000", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", marginTop: "10px" },
 };

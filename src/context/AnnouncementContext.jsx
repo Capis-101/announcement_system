@@ -1,4 +1,3 @@
-// src/context/AnnouncementContext.js
 import { createContext, useState, useEffect } from "react";
 import { db } from "../firebase";
 import {
@@ -10,6 +9,7 @@ import {
   onSnapshot,
   query,
   orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 
 export const AnnouncementContext = createContext();
@@ -17,7 +17,7 @@ export const AnnouncementContext = createContext();
 export const AnnouncementProvider = ({ children }) => {
   const [announcements, setAnnouncements] = useState([]);
 
-  // Real-time load announcements
+  // ===== Real-time Firestore listener =====
   useEffect(() => {
     const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -27,20 +27,21 @@ export const AnnouncementProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  // ===== Add Announcement =====
   const addAnnouncement = async (announcement) => {
-    const docRef = await addDoc(collection(db, "announcements"), announcement);
-    setAnnouncements((prev) => [{ id: docRef.id, ...announcement }, ...prev]);
+    await addDoc(collection(db, "announcements"), {
+      ...announcement,
+      createdAt: serverTimestamp(),
+    });
   };
 
+  // ===== Update Announcement =====
   const updateAnnouncement = async (id, updatedFields) => {
-    setAnnouncements((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, ...updatedFields } : a))
-    );
     await updateDoc(doc(db, "announcements", id), updatedFields);
   };
 
+  // ===== Delete Announcement =====
   const deleteAnnouncement = async (id) => {
-    setAnnouncements((prev) => prev.filter((a) => a.id !== id));
     await deleteDoc(doc(db, "announcements", id));
   };
 
